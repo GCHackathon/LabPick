@@ -44,9 +44,8 @@ export default function LabDetail() {
   }, [id])
 
   const fetchPapers = () => {
-    const query = professor?.scholar_link || professor?.name
-    if (!query) return
-    fetch(`/api/papers?name=${encodeURIComponent(query)}`)
+    if (!professor?.scholar_link) return
+    fetch(`/api/papers?name=${encodeURIComponent(professor.scholar_link)}`)
       .then(r => r.json())
       .then(d => setPapers(d.papers || []))
   }
@@ -185,7 +184,7 @@ export default function LabDetail() {
             ) : papers.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-4">논문을 불러오는 중...</p>
             ) : null}
-            {papers.map(paper => (
+            {professor.scholar_link && papers.map(paper => (
               <div key={paper.paperId} className="bg-card rounded-2xl p-4 border border-border space-y-2">
                 <p className="text-sm font-semibold leading-snug">{paper.title}</p>
                 <p className="text-xs text-muted-foreground">{paper.year} · 인용 {paper.citationCount}회</p>
