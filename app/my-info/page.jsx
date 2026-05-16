@@ -1,29 +1,31 @@
 "use client"
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { User, BookOpen, Sparkles, LogOut, ChevronRight, GraduationCap, MessageCircle } from 'lucide-react'
 import { supabase } from '../../utils/supabase'
 
-const INTERESTS = ['AI/ML', '웹개발', '보안', '데이터', '로보틱스', '네트워크', '컴퓨터비전', 'NLP', '기타']
 const GRADES = [1, 2, 3, 4]
-const MAJORS = ['컴퓨터공학과', '소프트웨어학과', '인공지능학과', '정보보안학과', '전자공학과']
+const MAJORS = ['컴퓨터공학과', '소프트웨어학과', '인공지능학과', '기타']
+const INTERESTS = ['AI/머신러닝', '웹 개발', '모바일 앱', '보안', '데이터 사이언스', '기타']
 
 export default function MyInfo() {
   const router = useRouter()
   const [user, setUser] = useState(null)
   const [student, setStudent] = useState(null)
-  const [editing, setEditing] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [editing, setEditing] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [form, setForm] = useState({
-    name: '', grade: 1, major: '', interests: []
-  })
+  const [form, setForm] = useState({ name: '', grade: 1, major: '', interests: [] })
   const [customInterest, setCustomInterest] = useState('')
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
-      if (!data.user) { setLoading(false); return }
+      if (!data.user) {
+        setUser(null)
+        setLoading(false)
+        return
+      }
       setUser(data.user)
       const { data: s } = await supabase
         .from('students')
@@ -56,13 +58,14 @@ export default function MyInfo() {
     }
     const { data: s } = await supabase.from('students').select('*').eq('email', user.email).single()
     if (s) setStudent(s)
-    else setStudent({ ...form, email: user.email }) // fallback: 테이블 없을 때 로컬 데이터 사용
+    else setStudent({ ...form, email: user.email })
     setEditing(false)
     setSaving(false)
   }
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
+    setUser(null)
     router.push('/')
   }
 
@@ -163,7 +166,6 @@ export default function MyInfo() {
                 </button>
               ))}
             </div>
-            {/* 기타 직접 입력 */}
             <div className="flex gap-2 mt-2">
               <input
                 type="text"
@@ -192,7 +194,6 @@ export default function MyInfo() {
                 추가
               </button>
             </div>
-            {/* 선택된 관심분야 태그 */}
             {form.interests.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {form.interests.map(i => (
@@ -232,9 +233,27 @@ export default function MyInfo() {
   return (
     <div className="min-h-screen bg-background pb-24">
       <div className="max-w-[393px] mx-auto">
-        <div className="bg-card border-b border-border px-5 py-4">
-          <h1 className="text-xl font-bold text-foreground">내 정보</h1>
-          <p className="text-sm text-muted-foreground">{user.email}</p>
+        <div className="bg-card border-b border-border px-5 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <img src="/vibecoding/img/icon.png" alt="랩픽" className="w-10 h-10 object-contain" />
+              <div>
+                <h1 className="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary leading-tight" style={{ transform: 'skewX(-10deg)' }}>
+                  내 정보
+                </h1>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold -mt-0.5">My Profile</p>
+              </div>
+            </div>
+            {user ? (
+              <button onClick={handleLogout} className="flex items-center gap-1.5 px-3 py-1.5 bg-muted rounded-full text-xs font-medium text-muted-foreground">
+                로그아웃
+              </button>
+            ) : (
+              <Link href="/login" className="text-xs px-3 py-1.5 bg-gradient-to-r from-primary to-secondary text-white rounded-full font-medium">
+                로그인
+              </Link>
+            )}
+          </div>
         </div>
 
         <div className="px-5 py-4 space-y-4">

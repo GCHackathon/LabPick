@@ -100,7 +100,7 @@ export default function LabDetail() {
           <div className="flex items-center justify-center w-16 h-16 bg-white/20 rounded-2xl mb-4">
             <img src="/vibecoding/img/icon.png" alt="랩픽" className="w-12 h-12 object-contain" />
           </div>
-          <h1 className="text-2xl font-bold mb-2">{professor.lab_name}</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight mb-2">{professor.lab_name}</h1>
           <p className="text-white/90 mb-4">{professor.name} 교수</p>
           <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
             {professor.is_bot_active && (

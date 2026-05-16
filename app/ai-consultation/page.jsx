@@ -1,22 +1,32 @@
 "use client"
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Sparkles, FileText, BookOpen, User, MessageCircle } from 'lucide-react'
+import { Sparkles, BookOpen, User, MessageCircle } from 'lucide-react'
+import { supabase } from '../../utils/supabase'
 
 export default function AIConsultation() {
-  const [professors, setProfessors] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
+  const [professors, setProfessors] = useState([])
   const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user ?? null))
     fetch('/api/professors')
       .then(r => r.json())
-      .then(d => { setProfessors(d.professors || []); setLoading(false) })
+      .then(d => {
+        setProfessors(d.professors || [])
+        setLoading(false)
+      })
       .catch(() => setLoading(false))
   }, [])
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    setUser(null)
+  }
+
   const filtered = professors.filter(p => {
-    if (!searchQuery) return p.is_bot_active
     const q = searchQuery.toLowerCase()
     return p.is_bot_active && (
       p.name?.toLowerCase().includes(q) ||
@@ -28,9 +38,27 @@ export default function AIConsultation() {
   return (
     <div className="min-h-screen bg-background pb-24">
       <div className="max-w-[393px] mx-auto">
-        <div className="bg-card border-b border-border px-5 py-4">
-          <h1 className="text-2xl font-bold text-foreground mb-1">AI 상담</h1>
-          <p className="text-sm text-muted-foreground">교수님께 직접 연락하기 전, AI 봇에게 먼저 질문해보세요.</p>
+        <div className="bg-card border-b border-border px-5 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <img src="/vibecoding/img/icon.png" alt="랩픽" className="w-10 h-10 object-contain" />
+              <div>
+                <h1 className="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary leading-tight" style={{ transform: 'skewX(-10deg)' }}>
+                  AI 상담
+                </h1>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold -mt-0.5">AI Consultation</p>
+              </div>
+            </div>
+            {user ? (
+              <button onClick={handleLogout} className="flex items-center gap-1.5 px-3 py-1.5 bg-muted rounded-full text-xs font-medium text-muted-foreground">
+                로그아웃
+              </button>
+            ) : (
+              <Link href="/login" className="text-xs px-3 py-1.5 bg-gradient-to-r from-primary to-secondary text-white rounded-full font-medium">
+                로그인
+              </Link>
+            )}
+          </div>
         </div>
 
         <div className="px-5 py-4">
