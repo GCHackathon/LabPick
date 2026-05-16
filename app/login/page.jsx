@@ -70,7 +70,8 @@ export default function LoginPage() {
             <div className="inline-flex items-center justify-center mb-0">
               <img src="/vibecoding/img/icon.png" alt="logo" className="w-40 h-40 object-contain" />
             </div>
-            <p className="text-sm text-muted-foreground -mt-4">교수님 AI 봇 플랫폼</p>
+            <h1 className="text-3xl -mt-4 mb-1" style={{ fontFamily: 'var(--font-pacifico)' }}>LabPick</h1>
+            <p className="text-sm text-muted-foreground">교수님 AI 봇 플랫폼</p>
           </div>
 
           <p className="text-center text-sm font-medium text-muted-foreground mb-4">어떤 역할로 로그인하시나요?</p>
@@ -115,7 +116,8 @@ export default function LoginPage() {
             <div className="inline-flex items-center justify-center mb-0">
               <img src="/vibecoding/img/icon.png" alt="logo" className="w-40 h-40 object-contain" />
             </div>
-            <p className="text-sm text-muted-foreground -mt-4">
+            <h1 className="text-3xl -mt-4 mb-1" style={{ fontFamily: 'var(--font-pacifico)' }}>LabPick</h1>
+            <p className="text-sm text-muted-foreground">
               {role === 'professor' ? '교수님' : '학생'} {mode === 'login' ? '로그인' : '회원가입'}
             </p>
           </div>
