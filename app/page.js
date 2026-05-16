@@ -116,7 +116,7 @@ export default function LabExplore() {
                 {prof.is_bot_active && (
                   <div className="shrink-0 bg-gradient-to-r from-primary to-secondary text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 whitespace-nowrap">
                     <Sparkles className="w-4 h-4 shrink-0" />
-                    <span className="text-xs font-medium">AI 대역</span>
+                    <span className="text-xs font-medium">AI 봇</span>
                   </div>
                 )}
               </div>

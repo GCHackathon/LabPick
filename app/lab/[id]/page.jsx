@@ -104,7 +104,7 @@ export default function LabDetail() {
           <p className="text-white/90 mb-4">{professor.name} 교수</p>
           <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
             {professor.is_bot_active && (
-              <span className="shrink-0 bg-white/20 text-white text-xs px-3 py-1 rounded-full whitespace-nowrap">AI 대역 활성화</span>
+              <span className="shrink-0 bg-white/20 text-white text-xs px-3 py-1 rounded-full whitespace-nowrap">AI 봇 활성화</span>
             )}
             {(professor.keywords || []).map(k => (
               <span key={k} className="shrink-0 bg-white/20 text-white text-xs px-3 py-1 rounded-full whitespace-nowrap">{k}</span>
@@ -277,7 +277,7 @@ export default function LabDetail() {
             <div className="bg-card rounded-2xl p-5 border border-border text-center">
               <h3 className="font-semibold mb-2">직접 연결</h3>
               <p className="text-sm text-muted-foreground mb-6">
-                AI 대역이 답변할 수 없는 질문이나 면담이 필요한 경우 교수님께 직접 연결을 요청할 수 있습니다.
+                AI 봇이 답변할 수 없는 질문이나 면담이 필요한 경우 교수님께 직접 연결을 요청할 수 있습니다.
               </p>
               {professor.email && (
                 <a href={buildContactMailto(professor, student)} className="block w-full py-3 border border-border bg-card text-foreground text-sm font-medium rounded-xl hover:bg-muted">
@@ -295,7 +295,7 @@ export default function LabDetail() {
       <div className="fixed bottom-20 left-0 right-0 bg-background border-t border-border p-3">
         <div className="max-w-[393px] mx-auto flex gap-2">
           <Link href={`/ai-chat/${id}`} className="flex-1 text-center py-3 bg-gradient-to-r from-primary to-secondary text-white text-sm font-medium rounded-xl">
-            AI 대역에게 질문하기
+            AI 봇에게 질문하기
           </Link>
           <Link href={`/openchat/${id}`} className="flex-1 py-3 border border-border bg-card text-foreground text-sm font-medium rounded-xl hover:bg-muted text-center">
             오픈챗 참여

@@ -149,7 +149,7 @@ export default function ProfessorDashboard() {
         <div className="bg-card border-b border-border px-5 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-bold text-foreground">AI 대역 관리</h1>
+              <h1 className="text-xl font-bold text-foreground">AI 봇 관리</h1>
               <p className="text-sm text-muted-foreground">{professor.name} 교수님</p>
             </div>
             <div className="flex gap-1">
@@ -172,7 +172,7 @@ export default function ProfessorDashboard() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-white/80 text-sm mb-1">AI 대역 상태</p>
+                <p className="text-white/80 text-sm mb-1">AI 봇 상태</p>
                 <p className="text-2xl font-bold">{professor.is_bot_active ? '활성화' : '비활성'}</p>
               </div>
               <div>
@@ -367,7 +367,7 @@ export default function ProfessorDashboard() {
           {/* Notice */}
           <div className="flex items-center gap-3 p-4 bg-primary/10 rounded-2xl border border-primary/20">
             <AlertCircle className="w-5 h-5 text-primary flex-shrink-0" />
-            <p className="text-sm text-primary">학생들이 AI 대역을 통해 연구실에 질문할 수 있습니다.</p>
+            <p className="text-sm text-primary">학생들이 AI 봇을 통해 연구실에 질문할 수 있습니다.</p>
           </div>
 
           {/* Logout */}

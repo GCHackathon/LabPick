@@ -74,7 +74,7 @@ export default function AIChat() {
           setProfessor(prof)
           setMessages([{
             role: 'ai',
-            content: `안녕하세요. ${prof.name} 교수님의 AI 대역입니다. 연구실과 교수님의 연구에 대해 궁금한 점을 질문해주세요.`,
+            content: `안녕하세요. ${prof.name} 교수님의 AI 봇입니다. 연구실과 교수님의 연구에 대해 궁금한 점을 질문해주세요.`,
           }])
         }
       })
@@ -180,7 +180,7 @@ export default function AIChat() {
               <ArrowLeft className="w-5 h-5" />
             </Link>
             <div className="flex-1">
-              <h1 className="text-lg font-semibold">{professor.name} 교수님 AI 대역</h1>
+              <h1 className="text-lg font-semibold">{professor.name} 교수님 AI 봇</h1>
               <span className="text-xs px-2 py-0.5 bg-muted text-muted-foreground rounded-full">문서 기반 답변</span>
             </div>
             <button onClick={() => setShowInfo(true)} className="p-2 hover:bg-muted rounded-full">

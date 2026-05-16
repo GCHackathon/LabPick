@@ -124,7 +124,7 @@ export default function ProfessorSetup() {
             </div>
             <div>
               <h1 className="font-bold text-lg">{isEdit ? '프로필 수정' : '교수님 프로필 설정'}</h1>
-              <p className="text-white/80 text-xs">{isEdit ? '정보를 수정하고 저장하세요' : 'AI 대역 활성화를 위한 정보를 입력해주세요'}</p>
+              <p className="text-white/80 text-xs">{isEdit ? '정보를 수정하고 저장하세요' : 'AI 봇 활성화를 위한 정보를 입력해주세요'}</p>
             </div>
           </div>
           <div className="flex gap-2">

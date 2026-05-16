@@ -75,7 +75,7 @@ export default function ProfessorTuning() {
             </div>
             <div>
               <h1 className="font-bold text-base">AI 튜닝</h1>
-              <p className="text-white/80 text-xs">AI 대역의 답변 방식을 직접 설정하세요</p>
+              <p className="text-white/80 text-xs">AI 봇의 답변 방식을 직접 설정하세요</p>
             </div>
           </div>
         </div>

@@ -30,7 +30,7 @@ export default function AIConsultation() {
       <div className="max-w-[393px] mx-auto">
         <div className="bg-card border-b border-border px-5 py-4">
           <h1 className="text-2xl font-bold text-foreground mb-1">AI 상담</h1>
-          <p className="text-sm text-muted-foreground">교수님께 직접 연락하기 전, AI 대역에게 먼저 질문해보세요.</p>
+          <p className="text-sm text-muted-foreground">교수님께 직접 연락하기 전, AI 봇에게 먼저 질문해보세요.</p>
         </div>
 
         <div className="px-5 py-4">
@@ -46,13 +46,13 @@ export default function AIConsultation() {
         <div className="px-5 space-y-3">
           {loading && <p className="text-sm text-muted-foreground text-center py-8">불러오는 중...</p>}
           {!loading && filtered.length === 0 && (
-            <p className="text-sm text-muted-foreground text-center py-8">AI 대역이 활성화된 연구실이 없습니다.</p>
+            <p className="text-sm text-muted-foreground text-center py-8">AI 봇이 활성화된 연구실이 없습니다.</p>
           )}
           {filtered.map(prof => (
             <div key={prof.id} className="bg-card rounded-2xl p-5 border border-border">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h3 className="font-semibold text-lg mb-1">{prof.name} 교수님 AI 대역</h3>
+                  <h3 className="font-semibold text-lg mb-1">{prof.name} 교수님 AI 봇</h3>
                   <p className="text-sm text-muted-foreground">{prof.lab_name}</p>
                 </div>
                 <span className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full font-medium">답변 가능</span>
@@ -65,7 +65,7 @@ export default function AIConsultation() {
                 </div>
                 <div className="flex items-center gap-1">
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span>AI 대역 활성화</span>
+                  <span>AI 봇 활성화</span>
                 </div>
               </div>
 

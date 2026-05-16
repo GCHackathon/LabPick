@@ -70,7 +70,7 @@ export default function LoginPage() {
             <div className="inline-flex items-center justify-center mb-0">
               <img src="/vibecoding/img/icon.png" alt="logo" className="w-40 h-40 object-contain" />
             </div>
-            <p className="text-sm text-muted-foreground -mt-4">교수님 AI 대역 플랫폼</p>
+            <p className="text-sm text-muted-foreground -mt-4">교수님 AI 봇 플랫폼</p>
           </div>
 
           <p className="text-center text-sm font-medium text-muted-foreground mb-4">어떤 역할로 로그인하시나요?</p>
@@ -98,7 +98,7 @@ export default function LoginPage() {
               </div>
               <div>
                 <p className="font-semibold text-foreground">교수님</p>
-                <p className="text-sm text-muted-foreground">AI 대역 관리 및 대시보드</p>
+                <p className="text-sm text-muted-foreground">AI 봇 관리 및 대시보드</p>
               </div>
             </button>
           </div>
