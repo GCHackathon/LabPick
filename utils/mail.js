@@ -16,12 +16,17 @@ export function buildContactMailto(professor, student) {
     ? `평소 ${student.interests.join(", ")} 분야에 관심을 가지고 공부해 왔습니다.`
     : "평소 관심 분야는 (관심 분야를 입력해 주세요)입니다."
 
+  const skillLine = student?.skills
+    ? `현재 보유하고 있는 주력 기술 및 스택은 ${student.skills}입니다.`
+    : ""
+
   const body = `${professor.name} 교수님께,
 
 안녕하세요. 랩픽(LabPick)을 통해 연락드리는 학생입니다.
 
 ${studentLine}
 ${interestLine}
+${skillLine}
 
 교수님의 ${professor.research_field || "연구 분야"}와 ${professor.lab_name} 연구실의 연구 주제(${professor.research_topic || "연구 주제"})에 큰 흥미를 느껴, 더 깊이 알아보고 싶어 메일 드립니다.
 

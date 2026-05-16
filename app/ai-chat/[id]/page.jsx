@@ -119,7 +119,11 @@ export default function AIChat() {
       const res = await fetch('/api/bot/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ professorId: id, question: msg }),
+        body: JSON.stringify({ 
+          professorId: id, 
+          question: msg,
+          studentProfile: student // 학생 프로필 정보 전달
+        }),
       })
       const data = await res.json()
       const errorText = data.detail ? `${data.error}\n(${data.detail})` : data.error

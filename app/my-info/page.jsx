@@ -34,7 +34,13 @@ export default function MyInfo() {
         .single()
       if (s) {
         setStudent(s)
-        setForm({ name: s.name, grade: s.grade, major: s.major, interests: s.interests || [] })
+        setForm({ 
+          name: s.name, 
+          grade: s.grade, 
+          major: s.major, 
+          interests: s.interests || [],
+          skills: s.skills || '' // 이 부분이 누락되어 에러가 발생했습니다.
+        })
       }
       setLoading(false)
     })
@@ -209,6 +215,19 @@ export default function MyInfo() {
             )}
           </div>
 
+          <div>
+            <p className="text-sm font-medium mb-2">보유 기술 및 스택</p>
+            <input 
+              value={form.skills} 
+              onChange={e => setForm(f => ({ ...f, skills: e.target.value }))} 
+              placeholder="예: Python, React, PyTorch, C++" 
+              className={inputClass} 
+            />
+            <p className="text-[11px] text-muted-foreground mt-1.5 ml-1">
+              쉼표(,)로 구분해서 입력해 주세요. AI 상담 시 이 정보를 바탕으로 조언해 드립니다.
+            </p>
+          </div>
+
           <div className="flex gap-2 pt-2">
             {student && (
               <button onClick={() => setEditing(false)} className="flex-1 h-12 border border-border bg-card text-foreground text-sm font-medium rounded-xl">
@@ -274,6 +293,19 @@ export default function MyInfo() {
                   <span key={i} className="px-2 py-1 bg-white/20 text-white text-xs rounded-full">{i}</span>
                 ))}
               </div>
+
+              {student.skills && (
+                <div className="mt-4 pt-4 border-t border-white/10">
+                  <p className="text-[10px] text-white/50 mb-2 font-bold uppercase tracking-wider">SKILLS & STACK</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {student.skills.split(',').map(s => (
+                      <span key={s} className="px-2 py-0.5 bg-cyan-400/20 text-cyan-100 text-[10px] font-bold rounded border border-cyan-400/30 uppercase">
+                        {s.trim()}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="bg-muted rounded-2xl p-5 text-center border border-border">

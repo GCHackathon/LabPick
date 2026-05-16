@@ -10,7 +10,7 @@ const paperCache = new Map()
 
 export async function POST(request) {
   try {
-    const { professorId, question } = await request.json()
+    const { professorId, question, studentProfile } = await request.json()
 
     if (!professorId || !question) {
       return NextResponse.json({ error: "professorId와 question이 필요합니다" }, { status: 400 })
@@ -25,6 +25,16 @@ export async function POST(request) {
     if (error || !professor) {
       return NextResponse.json({ error: "교수님 정보를 찾을 수 없습니다" }, { status: 404 })
     }
+
+    // 학생 정보 텍스트화
+    const studentContext = studentProfile 
+      ? `\n[상담 중인 학생 정보]
+- 이름: ${studentProfile.name || "익명"}
+- 학년: ${studentProfile.grade || "미입력"}학년
+- 전공: ${studentProfile.major || "미입력"}
+- 관심 분야: ${Array.isArray(studentProfile.interests) ? studentProfile.interests.join(", ") : studentProfile.interests || "미입력"}
+- 보유 기술: ${studentProfile.skills || "미입력"}`
+      : "\n[상담 중인 학생 정보]\n정보 없음 (로그인하지 않은 학생이거나 프로필 미작성)"
 
     // 논문 캐시 확인 → 없으면 fetch
     let paperContext = ""
@@ -52,6 +62,8 @@ export async function POST(request) {
 
     const systemPrompt = `당신은 ${professor.name} 교수님의 공식 AI 대리인입니다.
 학생들의 연구실 관련 질문에 친절하고 전문적으로 답변하세요.
+특히, 아래 [상담 중인 학생 정보]를 면밀히 분석하여 학생의 관심사나 기술 스택이 교수님의 연구와 어떻게 연결될 수 있는지 언급하며 개인화된 조언을 해주세요.
+${studentContext}
 
 [교수님 정보]
 - 이름: ${professor.name}
@@ -63,15 +75,16 @@ export async function POST(request) {
 - 위치: ${professor.office_location || ""}
 ${paperContext ? `\n[교수님 논문 목록 (Semantic Scholar 기반)]\n${paperContext}` : ""}
 ${faqContext}
-${professor.custom_instructions ? `\n[교수님 추가 지시사항 - 반드시 반영]\n${professor.custom_instructions}` : ""}
+${professor.custom_instructions ? `\n[교수님이 직접 주신 추가 지시사항]\n${professor.custom_instructions}` : ""}
 
 [답변 규칙]
-- 위 정보를 기반으로 답변하세요
-- FAQ에 해당 질문이 있으면 FAQ 답변을 우선 사용하세요
-- 논문 관련 질문 시 위 논문 목록에서 관련 논문을 찾아 설명하세요
-- 논문의 선수지식은 연구 분야와 논문 제목/초록을 바탕으로 추론하세요
-- 모르는 내용은 "해당 부분은 교수님께 직접 문의해 주세요"라고 안내하세요
-- 학생이 '면담', '직접 연락', '이메일', '만나고 싶다' 등을 언급하면 suggest_escalation: true 반환
+- 학생의 학년과 보유 기술(Stack)을 고려하여 답변하세요. (예: 2학년이라면 기초를 강조, 파이썬을 잘한다면 연구실의 파이썬 기반 프로젝트 언급)
+- 학생이 질문하지 않았더라도 학생의 프로필과 교수님의 연구 주제가 잘 맞으면 적극적으로 어필하세요.
+- 말투는 지적이고 권위 있으면서도 친절한 교수님의 말투를 유지하세요.
+- FAQ에 해당 질문이 있으면 FAQ 답변을 우선 사용하세요.
+- 논문 관련 질문 시 위 논문 목록에서 관련 논문을 찾아 설명하세요.
+- 모르는 내용은 "해당 부분은 제 지식 베이스에 없네요. 교수님께 직접 여쭤보시겠어요?"라고 안내하세요.
+- 학생이 '면담', '직접 연락', '이메일', '만나고 싶다' 등을 언급하면 suggest_escalation: true 반환.
 
 반드시 JSON 형식 {"answer": "답변 내용", "suggest_escalation": true 또는 false} 으로만 반환하세요.`
 
