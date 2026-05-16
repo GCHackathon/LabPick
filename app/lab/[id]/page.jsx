@@ -72,7 +72,7 @@ export default function LabDetail() {
 
   const tabs = [
     { id: 'info', label: '연구실 정보' },
-    { id: 'papers', label: '논문' },
+    ...(professor.scholar_link ? [{ id: 'papers', label: '논문' }] : []),
     { id: 'members', label: '연구원' },
     { id: 'contact', label: '직접 연결' },
   ]
@@ -114,7 +114,7 @@ export default function LabDetail() {
         </div>
 
         {/* Tabs */}
-        <div className="grid grid-cols-4 bg-card border-b border-border">
+        <div className={`grid grid-cols-${tabs.length} bg-card border-b border-border`}>
           {tabs.map(tab => (
             <button
               key={tab.id}
