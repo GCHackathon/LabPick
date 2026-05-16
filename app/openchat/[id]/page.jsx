@@ -196,7 +196,11 @@ export default function OpenChatRoom() {
         </div>
 
         {/* 메시지 영역 */}
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3" style={{ paddingBottom: '80px' }}>
+        <div className="flex-1 relative overflow-hidden">
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none" style={{ zIndex: 1 }}>
+            <img src="/vibecoding/img/icon.png" alt="" className="w-96 opacity-25 object-contain" draggable={false} />
+          </div>
+        <div className="h-full overflow-y-auto px-4 py-4 space-y-3 relative" style={{ paddingBottom: '80px', zIndex: 2 }}>
           {loading && <p className="text-xs text-muted-foreground text-center py-4">불러오는 중...</p>}
           {!loading && messages.length === 0 && (
             <div className="text-center py-8">
@@ -230,6 +234,7 @@ export default function OpenChatRoom() {
           })}
           <div ref={bottomRef} />
         </div>
+        </div>{/* 메시지 래퍼 끝 */}
 
         {/* 입력창 */}
         <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border px-4 py-3 z-10">
