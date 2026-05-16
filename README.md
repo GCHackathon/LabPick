@@ -153,8 +153,8 @@ npm run dev
 | 단계 | 활용 도구 |
 |---|---|
 | 아이디어 | Claude, ChatGPT, Perplexity |
-| 기획 | Claude, ChatGPT, NotebookLM |
-| 개발 | Claude Code, Cursor, GitHub Copilot |
+| 기획 | Claude, ChatGPT, NotebookLM, Manifest |
+| 개발 | Claude Code, Gemini CLI, GitHub Copilot |
 | 디자인 | Figma AI, Canva AI |
 
 ---
