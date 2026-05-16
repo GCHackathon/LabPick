@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { User, BookOpen, Sparkles, LogOut, ChevronRight, GraduationCap } from 'lucide-react'
+import { User, BookOpen, Sparkles, LogOut, ChevronRight, GraduationCap, MessageCircle } from 'lucide-react'
 import { supabase } from '../../utils/supabase'
 
 const INTERESTS = ['AI/ML', '웹개발', '보안', '데이터', '로보틱스', '네트워크', '컴퓨터비전', 'NLP', '기타']
@@ -309,6 +309,10 @@ function BottomNav({ active }) {
         <Link href="/" className={`flex flex-col items-center gap-1 flex-1 ${active === 'home' ? 'text-primary' : 'text-muted-foreground'}`}>
           <BookOpen className="w-6 h-6" />
           <span className="text-xs">연구실</span>
+        </Link>
+        <Link href="/openchat" className={`flex flex-col items-center gap-1 flex-1 ${active === 'openchat' ? 'text-primary' : 'text-muted-foreground'}`}>
+          <MessageCircle className="w-6 h-6" />
+          <span className="text-xs">오픈챗</span>
         </Link>
         <Link href="/ai-consultation" className={`flex flex-col items-center gap-1 flex-1 ${active === 'ai' ? 'text-primary' : 'text-muted-foreground'}`}>
           <Sparkles className="w-6 h-6" />
