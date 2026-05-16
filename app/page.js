@@ -55,7 +55,10 @@ export default function LabExplore() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <img src="/vibecoding/img/icon.png" alt="랩픽" className="w-10 h-10 object-contain" />
-              <h1 className="text-2xl text-primary" style={{ fontFamily: 'var(--font-pacifico)' }}>LabPick</h1>
+              <div>
+                <h1 className="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary leading-tight" style={{ transform: 'skewX(-10deg)' }}>LabPick</h1>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold -mt-0.5">연구실 탐색 플랫폼</p>
+              </div>
             </div>
             {user ? (
               <button onClick={handleLogout} className="flex items-center gap-1.5 px-3 py-1.5 bg-muted rounded-full text-xs font-medium text-muted-foreground">
