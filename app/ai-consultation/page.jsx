@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Sparkles, FileText, BookOpen, User } from 'lucide-react'
+import { Sparkles, FileText, BookOpen, User, MessageCircle } from 'lucide-react'
 
 export default function AIConsultation() {
   const [professors, setProfessors] = useState([])
@@ -93,6 +93,10 @@ export default function AIConsultation() {
           <Link href="/" className="flex flex-col items-center gap-1 flex-1 text-muted-foreground">
             <BookOpen className="w-6 h-6" />
             <span className="text-xs">연구실</span>
+          </Link>
+          <Link href="/openchat" className="flex flex-col items-center gap-1 flex-1 text-muted-foreground">
+            <MessageCircle className="w-6 h-6" />
+            <span className="text-xs">오픈챗</span>
           </Link>
           <Link href="/ai-consultation" className="flex flex-col items-center gap-1 flex-1 text-primary">
             <Sparkles className="w-6 h-6" />
