@@ -145,9 +145,9 @@ export default function LabDetail() {
             )}
             <div className="bg-card rounded-2xl p-5 border border-border space-y-2 text-sm">
               <h3 className="font-semibold mb-3">연구실 정보</h3>
-              <div className="flex items-start gap-2">
-                <span className="text-muted-foreground min-w-16">소속:</span>
-                <span>{professor.department?.replace(/\s/g, '')}</span>
+              <div className="flex items-center gap-1">
+                <span className="text-muted-foreground">소속:</span>
+                <span>{professor.department?.trim()}</span>
               </div>
               {professor.office_location && (
                 <div className="flex items-center gap-2">
