@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { X, Sparkles, MapPin, Mail, BookOpen, MessageCircle, User, GraduationCap, Briefcase } from 'lucide-react'
+import { X, Sparkles, MapPin, Mail, BookOpen, MessageCircle, User, GraduationCap, Briefcase, Globe } from 'lucide-react'
 import { supabase } from '../../../utils/supabase'
 import { buildContactMailto } from '../../../utils/mail'
 
@@ -77,6 +77,12 @@ export default function LabDetail() {
     { id: 'contact', label: '직접 연결' },
   ]
 
+  const maskName2 = (name) => {
+    if (!name || name.length < 2) return name
+    if (name.length === 2) return name[0] + '○'
+    return name[0] + '○' + name[name.length - 1]
+  }
+
   const roleColor = (role) => {
     if (role?.includes('박사')) return 'bg-purple-100 text-purple-700'
     if (role?.includes('석사')) return 'bg-blue-100 text-blue-700'
@@ -141,7 +147,7 @@ export default function LabDetail() {
               <h3 className="font-semibold mb-3">연구실 정보</h3>
               <div className="flex items-start gap-2">
                 <span className="text-muted-foreground min-w-16">소속:</span>
-                <span>{professor.department}</span>
+                <span>{professor.department?.replace(/\s/g, '')}</span>
               </div>
               {professor.office_location && (
                 <div className="flex items-center gap-2">
@@ -153,6 +159,14 @@ export default function LabDetail() {
                 <div className="flex items-center gap-2">
                   <Mail className="w-4 h-4 text-muted-foreground" />
                   <span>{professor.email}</span>
+                </div>
+              )}
+              {professor.homepage && (
+                <div className="flex items-center gap-2">
+                  <Globe className="w-4 h-4 text-muted-foreground" />
+                  <a href={professor.homepage} target="_blank" rel="noreferrer" className="text-primary underline truncate">
+                    개인 홈페이지
+                  </a>
                 </div>
               )}
             </div>
@@ -216,7 +230,7 @@ export default function LabDetail() {
                       <span className="text-white text-sm font-bold">{member.name?.[0]}</span>
                     </div>
                     <div>
-                      <p className="font-semibold text-sm">{member.name}</p>
+                      <p className="font-semibold text-sm">{maskName2(member.name)}</p>
                       <div className="flex items-center gap-2 mt-0.5">
                         {member.role && (
                           <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${roleColor(member.role)}`}>{member.role}</span>

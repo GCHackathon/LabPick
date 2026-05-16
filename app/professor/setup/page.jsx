@@ -24,6 +24,7 @@ export default function ProfessorSetup() {
     lab_intro: '',
     scholar_link: '',
     keywords: '',
+    homepage: '',
   })
 
   useEffect(() => {
@@ -52,6 +53,7 @@ export default function ProfessorSetup() {
           lab_intro: existing.lab_intro || '',
           scholar_link: existing.scholar_link || '',
           keywords: (existing.keywords || []).join(', '),
+          homepage: existing.homepage || '',
         })
       } else {
         setForm(f => ({ ...f, email }))
@@ -75,6 +77,7 @@ export default function ProfessorSetup() {
       research_topic: form.research_topic,
       lab_intro: form.lab_intro,
       scholar_link: form.scholar_link,
+      homepage: form.homepage,
       keywords: form.keywords.split(',').map(k => k.trim()).filter(Boolean),
       is_bot_active: true,
     }
@@ -154,6 +157,10 @@ export default function ProfessorSetup() {
             <div>
               <p className="text-sm font-medium mb-2">연구실 위치</p>
               <input value={form.office_location} onChange={e => update('office_location', e.target.value)} placeholder="IT관 501호" className={inputClass} />
+            </div>
+            <div>
+              <p className="text-sm font-medium mb-2">개인 홈페이지 URL</p>
+              <input value={form.homepage} onChange={e => update('homepage', e.target.value)} placeholder="https://example.com" className={inputClass} />
             </div>
             {error && <p className="text-sm text-destructive text-center">{error}</p>}
             <button
