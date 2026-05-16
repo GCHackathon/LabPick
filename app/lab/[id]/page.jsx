@@ -72,7 +72,7 @@ export default function LabDetail() {
 
   const tabs = [
     { id: 'info', label: '연구실 정보' },
-    ...(professor.scholar_link ? [{ id: 'papers', label: '논문' }] : []),
+    { id: 'papers', label: '논문' },
     { id: 'members', label: '연구원' },
     { id: 'contact', label: '직접 연결' },
   ]
@@ -114,7 +114,7 @@ export default function LabDetail() {
         </div>
 
         {/* Tabs */}
-        <div className={`grid grid-cols-${tabs.length} bg-card border-b border-border`}>
+        <div className="grid grid-cols-4 bg-card border-b border-border">
           {tabs.map(tab => (
             <button
               key={tab.id}
@@ -180,9 +180,11 @@ export default function LabDetail() {
             <div className="bg-card rounded-2xl p-4 border border-border">
               <p className="text-xs text-muted-foreground">Semantic Scholar 기준으로 불러온 논문 목록입니다.</p>
             </div>
-            {papers.length === 0 && (
+            {!professor.scholar_link ? (
+              <p className="text-sm text-muted-foreground text-center py-8">등록된 논문 정보가 없습니다.</p>
+            ) : papers.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-4">논문을 불러오는 중...</p>
-            )}
+            ) : null}
             {papers.map(paper => (
               <div key={paper.paperId} className="bg-card rounded-2xl p-4 border border-border space-y-2">
                 <p className="text-sm font-semibold leading-snug">{paper.title}</p>
