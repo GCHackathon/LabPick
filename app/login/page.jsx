@@ -70,7 +70,7 @@ export default function LoginPage() {
             <div className="inline-flex items-center justify-center mb-0">
               <img src="/vibecoding/img/icon.png" alt="logo" className="w-40 h-40 object-contain" />
             </div>
-            <h1 className="text-3xl -mt-4 mb-1" style={{ fontFamily: 'var(--font-pacifico)' }}>LabPick</h1>
+            <h1 className="text-3xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary -mt-4 mb-1" style={{ transform: 'skewX(-10deg)' }}>LabPick</h1>
             <p className="text-sm text-muted-foreground">교수님 AI 봇 플랫폼</p>
           </div>
 
@@ -116,7 +116,7 @@ export default function LoginPage() {
             <div className="inline-flex items-center justify-center mb-0">
               <img src="/vibecoding/img/icon.png" alt="logo" className="w-40 h-40 object-contain" />
             </div>
-            <h1 className="text-3xl -mt-4 mb-1" style={{ fontFamily: 'var(--font-pacifico)' }}>LabPick</h1>
+            <h1 className="text-3xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary -mt-4 mb-1" style={{ transform: 'skewX(-10deg)' }}>LabPick</h1>
             <p className="text-sm text-muted-foreground">
               {role === 'professor' ? '교수님' : '학생'} {mode === 'login' ? '로그인' : '회원가입'}
             </p>
