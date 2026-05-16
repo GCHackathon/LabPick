@@ -90,8 +90,8 @@ export default function LabDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <div className="max-w-[393px] mx-auto">
+    <div className="h-screen flex flex-col bg-background overflow-hidden">
+      <div className="max-w-[393px] mx-auto w-full flex flex-col flex-1 overflow-hidden">
         {/* Hero */}
         <div className="bg-gradient-to-br from-primary to-secondary text-white p-6 relative">
           <Link href="/" className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-full">
@@ -129,9 +129,12 @@ export default function LabDetail() {
           ))}
         </div>
 
+        {/* 스크롤 콘텐츠 영역 */}
+        <div className="flex-1 overflow-y-auto pb-36">
+
         {/* Tab: 연구실 정보 */}
         {activeTab === 'info' && (
-          <div className="px-5 py-4 pb-32 space-y-4">
+          <div className="px-5 py-4 space-y-4">
             <div className="bg-card rounded-2xl p-5 border border-border">
               <h3 className="font-semibold mb-2">연구실 소개</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{professor.lab_intro || '소개 없음'}</p>
@@ -175,7 +178,7 @@ export default function LabDetail() {
 
         {/* Tab: 논문 */}
         {activeTab === 'papers' && (
-          <div className="px-5 py-4 pb-32 space-y-3">
+          <div className="px-5 py-4 space-y-3">
             <div className="bg-card rounded-2xl p-4 border border-border">
               <p className="text-xs text-muted-foreground">Semantic Scholar 기준으로 불러온 논문 목록입니다.</p>
             </div>
@@ -213,7 +216,7 @@ export default function LabDetail() {
 
         {/* Tab: 연구원 포트폴리오 */}
         {activeTab === 'members' && (
-          <div className="px-5 py-4 pb-32 space-y-4">
+          <div className="px-5 py-4 space-y-4">
             <div className="bg-card rounded-2xl p-4 border border-border">
               <p className="text-xs text-muted-foreground">이 연구실을 거쳐간 연구원들의 포트폴리오입니다.</p>
             </div>
@@ -284,6 +287,8 @@ export default function LabDetail() {
             </div>
           </div>
         )}
+
+        </div>{/* 스크롤 콘텐츠 영역 끝 */}
       </div>
 
       {/* 항상 고정 버튼 */}
