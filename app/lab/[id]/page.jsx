@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { X, Sparkles, MapPin, Mail, BookOpen, ArrowLeft } from 'lucide-react'
+import { X, Sparkles, MapPin, Mail, BookOpen, MessageCircle, User, GraduationCap, Briefcase } from 'lucide-react'
 import { supabase } from '../../../utils/supabase'
 import { buildContactMailto } from '../../../utils/mail'
 
@@ -14,6 +14,7 @@ export default function LabDetail() {
   const [summaries, setSummaries] = useState({})
   const [loading, setLoading] = useState(true)
   const [student, setStudent] = useState(null)
+  const [members, setMembers] = useState([])
 
   useEffect(() => {
     fetch('/api/professors')
@@ -33,6 +34,13 @@ export default function LabDetail() {
         .single()
         .then(({ data: s }) => { if (s) setStudent(s) })
     })
+
+    supabase
+      .from('lab_members')
+      .select('*')
+      .eq('professor_id', id)
+      .order('year', { ascending: false })
+      .then(({ data }) => { if (data) setMembers(data) })
   }, [id])
 
   const fetchPapers = () => {
@@ -65,9 +73,16 @@ export default function LabDetail() {
   const tabs = [
     { id: 'info', label: '연구실 정보' },
     { id: 'papers', label: '논문' },
-    { id: 'ai', label: 'AI 대역' },
+    { id: 'members', label: '연구원' },
     { id: 'contact', label: '직접 연결' },
   ]
+
+  const roleColor = (role) => {
+    if (role?.includes('박사')) return 'bg-purple-100 text-purple-700'
+    if (role?.includes('석사')) return 'bg-blue-100 text-blue-700'
+    if (role?.includes('졸업')) return 'bg-green-100 text-green-700'
+    return 'bg-muted text-muted-foreground'
+  }
 
   return (
     <div className="min-h-screen bg-background pb-24">
@@ -142,16 +157,6 @@ export default function LabDetail() {
               )}
             </div>
 
-            <div className="fixed bottom-24 left-0 right-0 bg-background border-t border-border p-4">
-              <div className="max-w-[393px] mx-auto flex gap-2">
-                <Link href={`/ai-chat/${id}`} className="flex-1 text-center py-3 bg-gradient-to-r from-primary to-secondary text-white text-sm font-medium rounded-xl">
-                  AI 대역에게 질문하기
-                </Link>
-                <button onClick={() => setActiveTab('papers')} className="flex-1 py-3 border border-border bg-card text-foreground text-sm font-medium rounded-xl hover:bg-muted">
-                  논문 보기
-                </button>
-              </div>
-            </div>
           </div>
         )}
 
@@ -191,21 +196,60 @@ export default function LabDetail() {
           </div>
         )}
 
-        {/* Tab: AI 대역 */}
-        {activeTab === 'ai' && (
-          <div className="px-5 py-4">
-            <div className="bg-gradient-to-br from-primary to-secondary text-white rounded-2xl p-6 text-center">
-              <div className="flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mx-auto mb-4">
-                <Sparkles className="w-8 h-8" />
-              </div>
-              <h3 className="font-semibold text-lg mb-2">교수님 AI 대역</h3>
-              <p className="text-sm text-white/90 mb-6">
-                {professor.name} 교수님의 논문, 연구 요약, FAQ를 기반으로 24시간 답변합니다.
-              </p>
-              <Link href={`/ai-chat/${id}`} className="block w-full py-3 bg-white text-primary text-sm font-semibold rounded-xl">
-                AI 대역과 상담 시작하기
-              </Link>
+        {/* Tab: 연구원 포트폴리오 */}
+        {activeTab === 'members' && (
+          <div className="px-5 py-4 space-y-4">
+            <div className="bg-card rounded-2xl p-4 border border-border">
+              <p className="text-xs text-muted-foreground">이 연구실을 거쳐간 연구원들의 포트폴리오입니다.</p>
             </div>
+
+            {members.length === 0 ? (
+              <div className="text-center py-10">
+                <GraduationCap className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+                <p className="text-sm text-muted-foreground">아직 등록된 연구원이 없습니다.</p>
+              </div>
+            ) : (
+              members.map(member => (
+                <div key={member.id} className="bg-card rounded-2xl p-5 border border-border space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center shrink-0">
+                      <span className="text-white text-sm font-bold">{member.name?.[0]}</span>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-sm">{member.name}</p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        {member.role && (
+                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${roleColor(member.role)}`}>{member.role}</span>
+                        )}
+                        {member.year && (
+                          <span className="text-xs text-muted-foreground">{member.year}</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {member.papers && member.papers.length > 0 && (
+                    <div>
+                      <p className="text-xs font-medium text-muted-foreground mb-1.5 flex items-center gap-1">
+                        <BookOpen className="w-3 h-3" /> 참여 논문
+                      </p>
+                      <div className="space-y-1">
+                        {member.papers.map((p, i) => (
+                          <p key={i} className="text-xs text-foreground leading-snug pl-2 border-l-2 border-primary/30">{p}</p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {member.employment && (
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Briefcase className="w-3.5 h-3.5 shrink-0" />
+                      <span>{member.employment}</span>
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
           </div>
         )}
 
@@ -227,15 +271,36 @@ export default function LabDetail() {
         )}
       </div>
 
+      {/* 항상 고정 버튼 */}
+      <div className="fixed bottom-20 left-0 right-0 bg-background border-t border-border p-3">
+        <div className="max-w-[393px] mx-auto flex gap-2">
+          <Link href={`/ai-chat/${id}`} className="flex-1 text-center py-3 bg-gradient-to-r from-primary to-secondary text-white text-sm font-medium rounded-xl">
+            AI 대역에게 질문하기
+          </Link>
+          <Link href={`/openchat/${id}`} className="flex-1 py-3 border border-border bg-card text-foreground text-sm font-medium rounded-xl hover:bg-muted text-center">
+            오픈챗 참여
+          </Link>
+        </div>
+      </div>
+
+      {/* 하단 네비게이션 */}
       <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border">
         <div className="max-w-[393px] mx-auto flex items-center justify-around h-20 px-4">
-          <Link href="/" className="flex flex-col items-center gap-1 flex-1 text-muted-foreground">
+          <Link href="/" className="flex flex-col items-center gap-1 flex-1 text-primary">
             <BookOpen className="w-6 h-6" />
-            <span className="text-xs">연구실</span>
+            <span className="text-xs font-medium">연구실</span>
+          </Link>
+          <Link href="/openchat" className="flex flex-col items-center gap-1 flex-1 text-muted-foreground">
+            <MessageCircle className="w-6 h-6" />
+            <span className="text-xs">오픈챗</span>
           </Link>
           <Link href="/ai-consultation" className="flex flex-col items-center gap-1 flex-1 text-muted-foreground">
             <Sparkles className="w-6 h-6" />
             <span className="text-xs">AI상담</span>
+          </Link>
+          <Link href="/my-info" className="flex flex-col items-center gap-1 flex-1 text-muted-foreground">
+            <User className="w-6 h-6" />
+            <span className="text-xs">내정보</span>
           </Link>
         </div>
       </nav>

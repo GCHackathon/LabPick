@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Sparkles, FileText, BookOpen, User, Bell } from 'lucide-react'
+import { Sparkles, FileText, BookOpen, User, MessageCircle } from 'lucide-react'
 import { supabase } from '../utils/supabase'
 
 export default function LabExplore() {
@@ -159,12 +159,16 @@ export default function LabExplore() {
             <BookOpen className="w-6 h-6" />
             <span className="text-xs font-medium">연구실</span>
           </Link>
+          <Link href="/openchat" className="flex flex-col items-center gap-1 flex-1 text-muted-foreground">
+            <MessageCircle className="w-6 h-6" />
+            <span className="text-xs">오픈챗</span>
+          </Link>
           <Link href="/ai-consultation" className="flex flex-col items-center gap-1 flex-1 text-muted-foreground">
             <Sparkles className="w-6 h-6" />
             <span className="text-xs">AI상담</span>
           </Link>
           <Link href="/my-info" className="flex flex-col items-center gap-1 flex-1 text-muted-foreground">
-            <Bell className="w-6 h-6" />
+            <User className="w-6 h-6" />
             <span className="text-xs">내정보</span>
           </Link>
         </div>

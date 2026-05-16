@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Sparkles, Settings, MessageCircle, AlertCircle, LogOut, CheckCircle, Clock, ChevronDown, ChevronUp, SlidersHorizontal } from 'lucide-react'
+import { Sparkles, Settings, MessageCircle, AlertCircle, LogOut, CheckCircle, Clock, ChevronDown, ChevronUp, SlidersHorizontal, GraduationCap, Plus, Trash2, X } from 'lucide-react'
 import { supabase } from '../../../utils/supabase'
 
 const CHECK_QUESTIONS = [
@@ -19,6 +19,12 @@ export default function ProfessorDashboard() {
   const [checkResults, setCheckResults] = useState(null)
   const [lastCheck, setLastCheck] = useState(null)
   const [showResults, setShowResults] = useState(false)
+  const [members, setMembers] = useState([])
+  const [showMemberForm, setShowMemberForm] = useState(false)
+  const [memberForm, setMemberForm] = useState({ name: '', role: '', papers: '', employment: '', year: '' })
+  const [savingMember, setSavingMember] = useState(false)
+
+  const ROLES = ['학부연구생', '석사재학', '석사졸업', '박사재학', '박사졸업']
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
@@ -32,6 +38,7 @@ export default function ProfessorDashboard() {
         router.push('/professor/setup')
       } else {
         setProfessor(profs)
+        loadMembers(profs.id)
         // 마지막 체크 기록 불러오기
         const { data: checks } = await supabase
           .from('bot_checks')
@@ -48,6 +55,33 @@ export default function ProfessorDashboard() {
       setLoading(false)
     })
   }, [])
+
+  const loadMembers = async (profId) => {
+    const { data } = await supabase.from('lab_members').select('*').eq('professor_id', profId).order('created_at', { ascending: false })
+    if (data) setMembers(data)
+  }
+
+  const addMember = async () => {
+    if (!memberForm.name || !professor) return
+    setSavingMember(true)
+    await supabase.from('lab_members').insert({
+      professor_id: professor.id,
+      name: memberForm.name,
+      role: memberForm.role,
+      papers: memberForm.papers ? memberForm.papers.split('\n').filter(Boolean) : [],
+      employment: memberForm.employment,
+      year: memberForm.year,
+    })
+    setMemberForm({ name: '', role: '', papers: '', employment: '', year: '' })
+    setShowMemberForm(false)
+    await loadMembers(professor.id)
+    setSavingMember(false)
+  }
+
+  const deleteMember = async (id) => {
+    await supabase.from('lab_members').delete().eq('id', id)
+    setMembers(prev => prev.filter(m => m.id !== id))
+  }
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -244,6 +278,72 @@ export default function ProfessorDashboard() {
                   </div>
                 )}
               </div>
+            )}
+          </div>
+
+          {/* 연구원 관리 */}
+          <div className="bg-card rounded-2xl border border-border overflow-hidden">
+            <div className="p-5 flex items-center justify-between">
+              <h3 className="font-semibold flex items-center gap-2">
+                <GraduationCap className="w-5 h-5 text-primary" />
+                연구원 포트폴리오
+              </h3>
+              <button
+                onClick={() => setShowMemberForm(v => !v)}
+                className="flex items-center gap-1 text-xs text-primary font-medium px-3 py-1.5 bg-primary/10 rounded-full"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                추가
+              </button>
+            </div>
+
+            {/* 추가 폼 */}
+            {showMemberForm && (
+              <div className="px-5 pb-5 space-y-3 border-t border-border pt-4">
+                <input className="w-full h-10 px-3 bg-muted rounded-xl text-sm outline-none" placeholder="이름 *" value={memberForm.name} onChange={e => setMemberForm({...memberForm, name: e.target.value})} />
+                <div className="flex flex-wrap gap-2">
+                  {ROLES.map(r => (
+                    <button key={r} onClick={() => setMemberForm({...memberForm, role: r})}
+                      className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${memberForm.role === r ? 'bg-primary text-white border-primary' : 'border-border text-muted-foreground'}`}>
+                      {r}
+                    </button>
+                  ))}
+                </div>
+                <input className="w-full h-10 px-3 bg-muted rounded-xl text-sm outline-none" placeholder="졸업/재직 연도 (예: 2023)" value={memberForm.year} onChange={e => setMemberForm({...memberForm, year: e.target.value})} />
+                <textarea className="w-full px-3 py-2 bg-muted rounded-xl text-sm outline-none resize-none" rows={3} placeholder={"참여 논문 (줄바꿈으로 구분)\n예: 딥러닝 기반 X 연구\nTransformer 활용 Y 논문"} value={memberForm.papers} onChange={e => setMemberForm({...memberForm, papers: e.target.value})} />
+                <input className="w-full h-10 px-3 bg-muted rounded-xl text-sm outline-none" placeholder="취업처 / 진학 (예: 삼성전자, 박사진학)" value={memberForm.employment} onChange={e => setMemberForm({...memberForm, employment: e.target.value})} />
+                <div className="flex gap-2">
+                  <button onClick={() => setShowMemberForm(false)} className="flex-1 py-2 border border-border rounded-xl text-sm text-muted-foreground">취소</button>
+                  <button onClick={addMember} disabled={savingMember || !memberForm.name} className="flex-1 py-2 bg-gradient-to-r from-primary to-secondary text-white text-sm font-medium rounded-xl disabled:opacity-40">
+                    {savingMember ? '저장 중...' : '저장'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* 멤버 목록 */}
+            {members.length > 0 && (
+              <div className="border-t border-border divide-y divide-border">
+                {members.map(m => (
+                  <div key={m.id} className="px-5 py-3 flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">{m.name}</span>
+                        {m.role && <span className="text-xs px-2 py-0.5 bg-primary/10 text-primary rounded-full">{m.role}</span>}
+                        {m.year && <span className="text-xs text-muted-foreground">{m.year}</span>}
+                      </div>
+                      {m.employment && <p className="text-xs text-muted-foreground mt-0.5">→ {m.employment}</p>}
+                      {(m.papers || []).length > 0 && <p className="text-xs text-muted-foreground mt-0.5">논문 {m.papers.length}편</p>}
+                    </div>
+                    <button onClick={() => deleteMember(m.id)} className="p-1.5 hover:bg-muted rounded-full shrink-0">
+                      <Trash2 className="w-3.5 h-3.5 text-muted-foreground" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            {members.length === 0 && !showMemberForm && (
+              <p className="text-xs text-muted-foreground text-center pb-5">등록된 연구원이 없습니다.</p>
             )}
           </div>
 

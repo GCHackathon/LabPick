@@ -9,7 +9,16 @@ export default function LoginPage() {
   const router = useRouter()
   const [role, setRole] = useState(null) // null | 'student' | 'professor'
   const [mode, setMode] = useState('login') // 'login' | 'signup'
-  const [form, setForm] = useState({ email: '', password: '' })
+  const [form, setForm] = useState({ email: '', password: '', name: '', major: '', status: '' })
+
+  const STUDENT_STATUSES = [
+    { id: '관련없음', label: '관련 없음', desc: '연구실과 무관하게 탐색 중' },
+    { id: '학부연구생', label: '학부 연구생', desc: '학부생으로 연구실 참여 중' },
+    { id: '석사재학', label: '석사 재학', desc: '석사과정 재학 중' },
+    { id: '석사졸업', label: '석사 졸업', desc: '석사 졸업 후 구직/진학' },
+    { id: '박사재학', label: '박사 재학', desc: '박사과정 재학 중' },
+    { id: '박사졸업', label: '박사 졸업', desc: '박사 졸업 후 취업/연구' },
+  ]
   const [showPw, setShowPw] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -32,6 +41,15 @@ export default function LoginPage() {
           options: { data: { role } },
         })
         if (error) throw error
+        if (role === 'student') {
+          await supabase.from('students').insert({
+            email: form.email,
+            name: form.name,
+            major: form.major,
+            grade: form.status,
+            interests: '',
+          })
+        }
         router.push(role === 'professor' ? '/professor/setup' : '/')
       }
     } catch (e) {
@@ -98,7 +116,7 @@ export default function LoginPage() {
               <img src="/vibecoding/img/icon.png" alt="logo" className="w-40 h-40 object-contain" />
             </div>
             <p className="text-sm text-muted-foreground -mt-4">
-              {role === 'professor' ? '교수님' : '학생'} 로그인
+              {role === 'professor' ? '교수님' : '학생'} {mode === 'login' ? '로그인' : '회원가입'}
             </p>
           </div>
 
@@ -123,6 +141,19 @@ export default function LoginPage() {
         </div>
 
         <div className="bg-card rounded-3xl border border-border p-6 space-y-4">
+          {mode === 'signup' && role === 'student' && (
+            <div>
+              <p className="text-sm font-medium text-foreground mb-2">이름</p>
+              <input
+                type="text"
+                value={form.name}
+                onChange={e => setForm({ ...form, name: e.target.value })}
+                placeholder="홍길동"
+                className={inputClass}
+              />
+            </div>
+          )}
+
           <div>
             <p className="text-sm font-medium text-foreground mb-2">이메일</p>
             <input
@@ -154,13 +185,48 @@ export default function LoginPage() {
             </div>
           </div>
 
+          {mode === 'signup' && role === 'student' && (
+            <>
+              <div>
+                <p className="text-sm font-medium text-foreground mb-2">전공</p>
+                <input
+                  type="text"
+                  value={form.major}
+                  onChange={e => setForm({ ...form, major: e.target.value })}
+                  placeholder="컴퓨터공학과"
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <p className="text-sm font-medium text-foreground mb-3">현재 신분</p>
+                <div className="space-y-2">
+                  {STUDENT_STATUSES.map(s => (
+                    <button
+                      key={s.id}
+                      onClick={() => setForm({ ...form, status: s.id })}
+                      className={`w-full text-left px-4 py-3 rounded-xl border text-sm transition-colors ${
+                        form.status === s.id
+                          ? 'border-primary bg-primary/5 text-foreground'
+                          : 'border-border bg-muted/30 text-muted-foreground hover:bg-muted'
+                      }`}
+                    >
+                      <span className="font-medium text-foreground">{s.label}</span>
+                      <span className="text-xs text-muted-foreground ml-2">{s.desc}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
           {error && (
             <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-xl">{error}</p>
           )}
 
           <button
             onClick={handleSubmit}
-            disabled={loading}
+            disabled={loading || (mode === 'signup' && role === 'student' && !form.status)}
             className="w-full h-12 bg-gradient-to-r from-primary to-secondary text-white text-sm font-semibold rounded-xl hover:opacity-90 disabled:opacity-50"
           >
             {loading ? '처리 중...' : mode === 'login' ? '로그인' : '회원가입'}
