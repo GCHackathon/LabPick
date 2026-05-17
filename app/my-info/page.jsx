@@ -16,7 +16,7 @@ export default function MyInfo() {
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [form, setForm] = useState({ name: '', grade: 1, major: '', interests: [] })
+  const [form, setForm] = useState({ name: '', grade: 1, major: '', interests: [], skills: '' })
   const [customInterest, setCustomInterest] = useState('')
 
   useEffect(() => {
