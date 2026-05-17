@@ -34,13 +34,16 @@ export default function MyInfo() {
         .single()
       if (s) {
         setStudent(s)
-        setForm({ 
-          name: s.name, 
-          grade: s.grade, 
-          major: s.major, 
+        setForm({
+          name: s.name || '',
+          grade: s.grade || 1,
+          major: s.major || '',
           interests: s.interests || [],
-          skills: s.skills || '' // 이 부분이 누락되어 에러가 발생했습니다.
+          skills: s.skills || ''
         })
+      } else {
+        // students 테이블에 없으면 auth 이메일 앞부분을 이름 기본값으로
+        setForm(f => ({ ...f, name: data.user.user_metadata?.name || '' }))
       }
       setLoading(false)
     })
